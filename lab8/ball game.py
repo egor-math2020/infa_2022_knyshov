@@ -2,10 +2,11 @@ import pygame
 from pygame.draw import *
 from random import randint
 pygame.init()
-b=900
-a=1200
-FPS = 30
-screen = pygame.display.set_mode((a,b))
+b = 900
+a = 1200
+FPS = 60
+screen = pygame.display.set_mode((a, b))
+
 
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
@@ -15,47 +16,49 @@ MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
-ballx=[]
-bally=[]
-ballr=[]
-remcol=[]
-ballspeedx=[]
-ballspeedy=[]
-scope=0
-dt=5
+font = pygame.font.Font("C:/Users/User/Desktop/infa_2022_knyshov/lab8/ttf.ttf", 24)
+ballx = []
+bally = []
+ballr = []
+remcol = []
+ballspeedx = []
+ballspeedy = []
+scope = 0
+dt = 2
+variable = 0
 
 
+# Задаем функцию - генератор шаров
 def render(x, y, r, color):
-    for i in range(len(x)):
-        circle(screen, color[i], (x[i], y[i]), r[i])
+    for k in range(len(x)):
+        circle(screen, color[k], (x[k], y[k]), r[k])
 
 
-def move(dt, Vx, Vy, x, y, r, a, b):
-    for i in range(len(x)):
-        if (a-x[i])<r[i]:
-            x[i]=a-r[i]
-            Vx[i]=-Vx[i]
-            x[i]+=Vx[i]*dt
-        if (b-y[i])<r[i]:
-            Vy[i]=-Vy[i]
-            y[i] += Vy[i]*dt
-            y[i]=b-r[i]
-        if y[i]<r[i]:
-            Vy[i] = -Vy[i]
-            y[i] += Vy[i] * dt
-            y[i]=r[i]
-        if x[i]<r[i]:
-            Vx[i] = -Vx[i]
-            x[i] += Vx[i] * dt
-            x[i]=r[i]
-
-
+# Задаем функцию, отвечающую за движение шаров
+def move(vx, vy, x, y, r,):
+    for h in range(len(x)):
+        if (a-x[h]) < r[h]:
+            x[h] = a-r[h]
+            vx[h] = -vx[h]
+            x[h] += vx[h]*dt
+        if (b-y[h]) < r[h]:
+            vy[h] = -vy[h]
+            y[h] += vy[h]*dt
+            y[h] = b-r[h]
+        if y[h] < r[h]:
+            vy[h] = -vy[h]
+            y[h] += vy[h] * dt
+            y[h] = r[h]
+        if x[h] < r[h]:
+            vx[h] = -vx[h]
+            x[h] += vx[h] * dt
+            x[h] = r[h]
         else:
-            x[i]+=Vx[i]*dt
-            y[i]+=Vy[i]*dt
+            x[h] += vx[h]*dt
+            y[h] += vy[h]*dt
 
 
-
+# Задаем функцию - генератор значений
 def remember():
     x = randint(100, 1100)
     y = randint(100, 900)
@@ -65,29 +68,31 @@ def remember():
     bally.append(y)
     ballr.append(r)
     remcol.append(color)
-    Vx = randint(-10,10)
-    Vy = randint(-10,10)
-    ballspeedx.append(Vx)
-    ballspeedy.append(Vy)
-
-
+    vx = randint(-5, 5)
+    vy = randint(-5, 5)
+    ballspeedx.append(vx)
+    ballspeedy.append(vy)
 
 
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
 
-wait_time = 1
+wait_time = 4
 frame_counter = 0
 while not finished:
     clock.tick(FPS)
     screen.fill((0, 0, 0))
 
     if frame_counter % (FPS * wait_time) == 0:
-        remember()
+        if len(bally) <= 15:
+            remember()
         render(ballx, bally, ballr, remcol)
     render(ballx, bally, ballr, remcol)
-    move(dt, ballspeedx, ballspeedy, ballx, bally, ballr, a, b)
+    move(ballspeedx, ballspeedy, ballx, bally, ballr)
+    text = font.render("Score: " + str(scope), True, BLUE)
+
+    screen.blit(text, [1000, 1])
 
     pygame.display.update()
     for event in pygame.event.get():
