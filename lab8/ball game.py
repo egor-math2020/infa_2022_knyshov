@@ -116,3 +116,24 @@ while not finished:
     frame_counter += 1
 print(scope)
 pygame.quit()
+
+
+
+
+
+if self.x <= self.r:
+    self.vx *= (-1) * U
+    self.vy *= U
+    self.x = self.r
+elif self.x + self.r >= WIDTH:
+    self.vx *= (-1) * U
+    self.vy *= U
+    self.x = WIDTH - self.r
+if self.y <= self.r:
+    self.vy *= (-1) * U
+    self.vx *= U
+    self.y = self.r
+elif self.y + self.r >= HEIGHT:
+    self.vy *= (-1) * U
+    self.vx *= U
+    self.y = HEIGHT - self.r
